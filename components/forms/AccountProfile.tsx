@@ -23,6 +23,9 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 
+import { updateUser } from "@/lib/actions/user.actions";
+import { usePathname, useRouter } from "next/navigation";
+
 interface Props {
     user: {
         id: string;
@@ -38,6 +41,8 @@ interface Props {
 const AccountProfile = ({ user, btnTitle }: Props) => {
     const [files, setFiles] = useState<File[]>([]);
     const { startUpload } = useUploadThing("media");
+    const router = useRouter();
+    const pathname = usePathname();
 
 
     const form = useForm({
@@ -86,8 +91,23 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             }
         }
 
-        //TODO: Update user profile
+        await updateUser({
+            userId: user.id,
+            username: values.username,
+            name: values.name,
+            bio: values.bio,
+            image: values.profile_photo,
+            path: pathname
+        });
+
+        if (pathname === '/profile/edit') {
+            router.back();
+        } else {
+            router.push('/');
+        }
     };
+
+
 
     return (
         <Form {...form}>
