@@ -3,21 +3,22 @@
 import ProfileHeader from "@/components/shared/ProfileHeader";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
 import { redirect } from "next/navigation";
+
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from "next/image";
 import { profileTabs } from "@/constants";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 
 async function Page({ params }: { params: { id: string } }) {
     const user = await currentUser();
-
     if (!user) return null;
 
-    const userInfo = await fetchUser(params.id);
 
+    const userInfo = await fetchUser(params.id);
     if (!userInfo?.onboarded) redirect('/onboarding');
+
     return (
         <section>
             <ProfileHeader
@@ -33,7 +34,7 @@ async function Page({ params }: { params: { id: string } }) {
                 <Tabs defaultValue="threads" className="w-full">
                     <TabsList className="tab">
                         {profileTabs.map((tab) => (
-                            <TabsTrigger key={tab.label} value={tab.value}>
+                            <TabsTrigger key={tab.label} value={tab.value} className="tab">
                                 <Image
                                     src={tab.icon}
                                     alt={tab.label}
